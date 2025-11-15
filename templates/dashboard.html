@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Soccer Predictions Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #121212;
+            color: #f0f0f0;
+        }
+        header {
+            background-color: #1f1f1f;
+            padding: 20px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffcc00;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .match-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #1e1e1e;
+            border-left: 5px solid #ffcc00;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .match-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+        }
+        .team {
+            display: flex;
+            align-items: center;
+        }
+        .team img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+        .score {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffcc00;
+        }
+        .outcome {
+            font-weight: 500;
+            color: #00ffcc;
+        }
+        .wdw, .top3 {
+            font-size: 14px;
+            margin-top: 5px;
+            color: #cccccc;
+        }
+        .pdf-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #ffcc00;
+            color: #121212;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            transition: background-color 0.2s;
+        }
+        .pdf-btn:hover {
+            background-color: #e6b800;
+        }
+        select {
+            padding: 6px 12px;
+            background-color: #1f1f1f;
+            color: #f0f0f0;
+            border: 1px solid #ffcc00;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>⚽ Soccer Predictions Dashboard</header>
+    <div class="container">
+        <a href="/download_pdf" class="pdf-btn">Download PDF Report</a>
+
+        {% if leagues %}
+        <select id="leagueFilter" onchange="filterLeague()">
+            <option value="all">All Leagues</option>
+            {% for league in leagues %}
+            <option value="{{ league.league_id }}">{{ league.league_name }}</option>
+            {% endfor %}
+        </select>
+        {% endif %}
+
+        <div id="matches">
+            {% if matches %}
+                {% for m in matches %}
+                <div class="match-card" data-league="{{ m.league_id }}">
+                    <div class="team">
+                        <img src="{{ m.home_logo }}" alt="{{ m.home_name }}">
+                        <span>{{ m.home_name }}</span>
+                    </div>
+
+                    <div class="score">{{ m.predicted_score }}</div>
+
+                    <div class="team">
+                        <span>{{ m.away_name }}</span>
+                        <img src="{{ m.away_logo }}" alt="{{ m.away_name }}">
+                    </div>
+
+                    <div class="outcome">{{ m.outcome }}</div>
+
+                    {% if m.wdw %}
+                    <div class="wdw">
+                        Home: {{ m.wdw.home }}% | Draw: {{ m.wdw.draw }}% | Away: {{ m.wdw.away }}%
+                    </div>
+                    {% endif %}
+
+                    {% if m.top3 %}
+                    <div class="top3">
+                        Top 3 Scores: 
+                        {% for s, p in m.top3 %}
+                            {{ s }} => {{ p }}%{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No matches available today.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        function filterLeague() {
+            const selected = document.getElementById('leagueFilter').value;
+            const cards = document.querySelectorAll('.match-card');
+            cards.forEach(c => {
+                if (selected === 'all' || c.dataset.league === selected) {
+                    c.style.display = 'flex';
+                } else {
+                    c.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+        

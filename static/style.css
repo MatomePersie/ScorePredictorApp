@@ -1,0 +1,51 @@
+body {
+    background-color: #0d1117;
+    color: #fff;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+h1 { color: #ffd700; }
+
+.match-card {
+    background: linear-gradient(135deg, #1f1f1f, #2c2c2c);
+    border-radius: 12px;
+    border: 2px solid #444;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.match-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+}
+
+.match-card.live-match {
+    border: 2px solid #ff4c4c;
+    box-shadow: 0 0 20px #ff4c4c;
+}
+
+.live-indicator {
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 50%, 100% { opacity: 1; }
+    25%, 75% { opacity: 0; }
+}
+
+.pred-score {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ffd700;
+}
+
+.probabilities {
+    display: flex;
+    flex-direction: column;
+}
+
+.prob-bar span { display: block; font-size: 0.85rem; margin-bottom: 2px; }
+
+.top-scorelines .badge {
+    font-size: 0.85rem;
+    margin-bottom: 2px;
+}
